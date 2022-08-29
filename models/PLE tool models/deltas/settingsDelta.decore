@@ -1,0 +1,10 @@
+delta "settingsDelta"
+	dialect <http://www.esi.lsat.nl/setting>
+	modifies <../model/xcps.machine>, <../model/xcps.setting>
+{	
+	removePhysicalSettingsMapEntryFromPhysicalSettingsOfSettings(<Turner.turner>, <Settings>);
+	removePhysicalSettingsMapEntryFromPhysicalSettingsOfSettings(<Turner.vmotor>, <Settings>);
+	removePhysicalSettingsMapEntryFromPhysicalSettingsOfSettings(<Turner.gripper>, <Settings>);
+	
+}
+

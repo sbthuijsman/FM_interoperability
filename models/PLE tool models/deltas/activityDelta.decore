@@ -1,0 +1,14 @@
+delta "activityDelta"
+	dialect <http://www.esi.lsat.nl/activity>
+	modifies <../model/xcps.machine>, <../model/xcps.activity>
+{
+	removeActivityFromActivitiesOfActivitySet(<TopGoToTurner>, <ActivitySet>);
+	
+	removeActivityFromActivitiesOfActivitySet(<InputTopInverted>, <ActivitySet>);
+	removeActivityFromActivitiesOfActivitySet(<TurnerGoDown>, <ActivitySet>);
+	
+	removeActivityFromActivitiesOfActivitySet(<RetryTurnerGoDown>, <ActivitySet>);
+	removeActivityFromActivitiesOfActivitySet(<TurnerTurnTop>, <ActivitySet>);
+	
+	removeActivityFromActivitiesOfActivitySet(<BottomGoToTurner>, <ActivitySet>);
+}

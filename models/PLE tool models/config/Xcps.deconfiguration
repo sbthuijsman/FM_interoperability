@@ -1,0 +1,10 @@
+configuration <Xcps.defeaturemodel>{
+"xCPSmodel",
+"AssemblyType",
+"Normal",
+"Resource",
+"Turner",
+"Behavior",
+"NormalFlow",
+"PickPlace"
+}

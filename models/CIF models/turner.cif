@@ -1,0 +1,70 @@
+plant automaton Turner_gripper:
+    controllable grab,ungrab;
+    location Grab:
+        marked;
+        edge grab goto Grab;
+        edge ungrab goto Ungrab;
+    location Ungrab:
+        initial; marked;
+        edge grab goto Grab;
+        edge ungrab goto Ungrab;
+end
+
+plant automaton Turner_turner:
+    controllable flip_left,flip_right;
+    location Flip_left:
+        initial; marked;
+        edge flip_left goto Flip_left;
+        edge flip_right goto Flip_right;
+    location Flip_right:
+        marked;
+        edge flip_left goto Flip_left;
+        edge flip_right goto Flip_right;
+end
+
+plant automaton Turner_zMotor:
+    controllable move_to_above_belt, move_to_at_belt;
+    location Above_belt:
+        initial; marked;
+        edge move_to_above_belt goto Above_belt;
+        edge move_to_at_belt goto At_belt;
+    location At_belt:
+        marked;
+        edge move_to_above_belt goto Above_belt;
+        edge move_to_at_belt goto At_belt;
+end
+
+plant automaton Activity_TurnerTurnTop:
+    controllable claim_Turner, release_Turner, claim_Stopper1, release_Stopper1, claim_Stopper2, release_Stopper2;
+    location l0:
+        initial; marked;
+        edge claim_Stopper2 goto l1;
+    location l1: marked;
+        edge claim_Stopper1 goto l2;
+    location l2: marked;
+        edge claim_Turner goto l3;
+    location l3: marked;
+        edge Turner_gripper.grab goto l4;
+    location l4: marked;
+        edge Turner_zMotor.move_to_above_belt goto l5;
+    location l5: marked;
+        edge Turner_turner.flip_left goto l6;
+    location l6: marked;
+        edge Turner_zMotor.move_to_at_belt goto l7;
+    location l7: marked;
+        edge Turner_gripper.ungrab goto l8a;
+        edge Turner_zMotor.move_to_above_belt goto l8b;
+    location l8a: marked;
+        edge Turner_zMotor.move_to_above_belt goto l9;
+    location l8b: marked;
+        edge Turner_gripper.ungrab goto l9;
+    location l9: marked;
+        edge Turner_turner.flip_right goto l10;
+    location l10: marked;
+        edge release_Turner goto l11;
+    location l11: marked;
+        edge release_Stopper2 goto l12;
+    location l12: marked;
+        edge release_Stopper1;
+end
+

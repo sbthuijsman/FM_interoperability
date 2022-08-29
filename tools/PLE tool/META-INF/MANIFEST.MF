@@ -1,0 +1,13 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: MyHeadlessPlugin
+Bundle-SymbolicName: MyHeadlessPlugin;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Require-Bundle: org.eclipse.core.runtime,
+ de.christophseidl.util.eclipse.ui,
+ de.christophseidl.util.ecore,
+ org.deltaecore.feature.configuration,
+ org.deltaecore.feature.variant,
+ org.deltaecore.suite.variant
+Automatic-Module-Name: MyHeadlessPlugin
+Bundle-RequiredExecutionEnvironment: JavaSE-15

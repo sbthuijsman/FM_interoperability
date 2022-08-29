@@ -1,0 +1,26 @@
+import "xcps.activity"
+
+activities {
+	InputTopInverted
+	TopGoToTurner
+	InputBottom
+	TurnerGoDown
+	TurnerTurnTop
+	TopGoAfterTurner
+	BottomGoToTurner
+	TopGoToSensor4
+	BottomGoAfterTurner
+	TopGoToSwitch2
+	BottomGoToSensor4
+	BottomGofromSt3ToTable2
+	AlignTable2WithPickPlace
+	AlignTable2WithBelt
+	AlignTable2WithPickPlace
+	TopGoToPickPlace
+	TopPickUp
+	TopAssemble
+	AlignTable2WithBelt
+	AlignTable2WithPickPlace
+	ProdGoFromTable2ToBelt4
+}
+

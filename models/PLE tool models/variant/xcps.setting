@@ -1,0 +1,220 @@
+import "xcps.machine"
+PickPlace.vacuum {
+	Timings {
+		grab = 0.80
+		ungrab = 0.10
+	}
+}
+PickPlace.yzMotor {
+	Axis Y {
+		Profiles {
+			normal (V = 10, A = 20, J = 20)
+		}
+		Positions {
+			Belt = 0.0
+			Table = 0.120
+		}
+	}
+	Axis Z {
+		Profiles {
+			normal (V = 10, A = 20, J = 20)
+		}
+		Positions {
+			Above = 0.0
+			At = 0.120
+		}
+	}
+}
+Turner.zMotor {
+	Axis Z {
+		Profiles {
+			normal (V = 5, A = 10, J = 10)
+		}
+		Positions {
+			Above = 0.0
+			At = 0.120
+		}
+	}
+}
+Turner.turner {
+	Timings {
+		flip_left = 0.35
+		flip_right = 0.35
+	}
+}
+Turner.gripper {
+	Timings {
+		grab = 0.05
+		ungrab = 0.04
+	}
+}
+Switch2.switch {
+	Timings {
+		enable = 0.8
+		disable = 0.8
+	}
+}
+Switch3.switch {
+	Timings {
+		enable = 0.30
+		disable = 0.10
+	}
+}
+Sensor1.sensor {
+	Timings {
+		await = 0.10
+		pass = 0.55
+	}
+}
+Sensor2.sensor {
+	Timings {
+		await = 0.10
+		pass = 0.20
+	}
+}
+Sensor3.sensor {
+	Timings {
+		await = 0.1
+		pass = 0.1
+	}
+}
+Sensor4.sensor {
+	Timings {
+		await = 0.1
+		pass = 0.1
+	}
+}
+Sensor5.sensor {
+	Timings {
+		await = 0.03
+		pass = 0.50
+	}
+}
+Sensor8.sensor {
+	Timings {
+		await = 0.2
+		pass = 0.1
+	}
+}
+Sensor9.sensor {
+	Timings {
+		await = 0.01
+		pass = 0.015
+	}
+}
+Stopper1.stopper {
+	Timings {
+		enable = 0.03
+		disable = 0.03
+	}
+}
+Stopper2.stopper {
+	Timings {
+		enable = 0.03
+		disable = 0.03
+	}
+}
+Stopper3.stopper {
+	Timings {
+		enable = 0.03
+		disable = 0.03
+	}
+}
+Stopper4.stopper {
+	Timings {
+		enable = 0.03
+		disable = 0.03
+	}
+}
+Stopper5.stopper {
+	Timings {
+		enable = 0.03
+		disable = 0.03
+	}
+}
+Belt1.motor {
+	Timings {
+		enable = 0.01
+		disable = 0.01
+	}
+}
+Belt1.beltArea {
+	Timings {
+		traverse = 1.8
+	}
+}
+Belt2.motor {
+	Timings {
+		enable = 0.01
+		disable = 0.01
+	}
+}
+Belt2.beltArea {
+	Timings {
+		traverse = 0.5
+	}
+}
+Belt2_2.beltArea {
+	Timings {
+		traverse = 0.6
+	}
+}
+Belt2_3.beltArea {
+	Timings {
+		traverse = 0.6
+	}
+}
+Belt2_4.beltArea {
+	Timings {
+		traverse = 1.0
+	}
+}
+Belt2_5.beltArea {
+	Timings {
+		traverse = 0.5
+	}
+}
+Belt2_6.beltArea {
+	Timings {
+		traverse = 2.5
+	}
+}
+Belt3.beltArea {
+	Timings {
+		traverse = 0.25
+	}
+}
+Belt3_2.beltArea {
+	Timings {
+		traverse = 3
+	}
+}
+Belt4.beltArea {
+	Timings {
+		traverse = 2.2
+	}
+}
+Belt3.motor {
+	Timings {
+		enable = 0.01
+		disable = 0.01
+	}
+}
+Belt4.motor {
+	Timings {
+		enable = 0.01
+		disable = 0.01
+	}
+}
+IndexingTable2.motor {
+	Timings {
+		enable = 0.1
+		disable = 0.1
+	}
+}
+IndexingTable2.aligner {
+	Timings {
+		alignWithBelt = 0.6
+		alignWithOther = 0.6
+	}
+} 

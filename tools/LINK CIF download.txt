@@ -1,0 +1,3 @@
+https://www.eclipse.org/escet/download.html
+
+for provider bin files (for cif to mcrl2 translation and cif synthesis), use https://cstweb.wtb.tue.nl/update/trunk-r9682/releases/

@@ -1,0 +1,9 @@
+controllable InputTopInverted, TopGoToTurner, TurnerGoDown, TopGoAfterTurner, TopGoToSensor4, TopGoToSwitch2, TopGoToPickPlace, TopPickUp, TopAssemble, InputBottom, BottomGoToTurner, BottomGoAfterTurner, BottomGoToSensor4, BottomGofromSt3ToTable2, AlignTable2WithPickPlace, AlignTable2WithBelt, ProdGoFromTable2ToBelt4;
+controllable TURNERDOWNSUCC_TurnerTurnTop, TURNERDOWNFAIL_RetryTurnerGoDown;
+plant automaton activities:
+    location l0:
+        initial; marked;
+        edge InputTopInverted, TopGoToTurner, TurnerGoDown, TopGoAfterTurner, TopGoToSensor4, TopGoToSwitch2, TopGoToPickPlace, TopPickUp, TopAssemble, InputBottom, BottomGoToTurner, BottomGoAfterTurner, BottomGoToSensor4, BottomGofromSt3ToTable2, AlignTable2WithPickPlace, AlignTable2WithBelt, ProdGoFromTable2ToBelt4;
+        edge TURNERDOWNSUCC_TurnerTurnTop, TURNERDOWNFAIL_RetryTurnerGoDown;
+end
+

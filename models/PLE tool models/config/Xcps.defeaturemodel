@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="ASCII"?>
+<feature:DEFeatureModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:feature="http://deltaecore.org/feature/1.0">
+  <rootFeature minCardinality="1" maxCardinality="1" name="xCPSmodel">
+    <groups minCardinality="3" maxCardinality="3">
+      <features minCardinality="1" maxCardinality="1" name="AssemblyType">
+        <groups minCardinality="1" maxCardinality="1">
+          <features maxCardinality="1" name="Normal"/>
+          <features maxCardinality="1" name="Inverted"/>
+        </groups>
+      </features>
+      <features minCardinality="1" maxCardinality="1" name="Resource">
+        <groups minCardinality="1" maxCardinality="2">
+          <features maxCardinality="1" name="Turner"/>
+          <features minCardinality="1" maxCardinality="1" name="PickPlace"/>
+        </groups>
+      </features>
+      <features minCardinality="1" maxCardinality="1" name="Behavior">
+        <groups minCardinality="1" maxCardinality="1">
+          <features maxCardinality="1" name="NormalFlow"/>
+          <features maxCardinality="1" name="InvertedFlow"/>
+        </groups>
+      </features>
+    </groups>
+  </rootFeature>
+</feature:DEFeatureModel>

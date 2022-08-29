@@ -1,0 +1,7 @@
+delta "settingsDeltaTurner"
+	dialect <http://www.esi.lsat.nl/setting>
+	modifies <../model/xcps.machine>, <../model/xcps.setting>
+{
+
+}
+

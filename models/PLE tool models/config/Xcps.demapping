@@ -1,0 +1,8 @@
+!Inverted: 
+<../deltas/machineDelta.decore>, <../deltas/settingsDelta.decore>,
+<../deltas/activityDelta.decore>
+
+Turner: 
+<../deltas/activityDelta.decore>, <../deltas/settingsDeltaTurner.decore>
+
+

@@ -1,0 +1,93 @@
+sort LocSort_Turner_gripper = struct loc_Turner_gripper_Grab | loc_Turner_gripper_Ungrab;
+
+proc BehProc_Turner_gripper(Locvar_Turner_gripper : LocSort_Turner_gripper) =
+  (Locvar_Turner_gripper == loc_Turner_gripper_Grab) -> grab . BehProc_Turner_gripper(loc_Turner_gripper_Grab) +
+  (Locvar_Turner_gripper == loc_Turner_gripper_Grab) -> ungrab . BehProc_Turner_gripper(loc_Turner_gripper_Ungrab) +
+  (Locvar_Turner_gripper == loc_Turner_gripper_Ungrab) -> grab . BehProc_Turner_gripper(loc_Turner_gripper_Grab) +
+  (Locvar_Turner_gripper == loc_Turner_gripper_Ungrab) -> ungrab . BehProc_Turner_gripper(loc_Turner_gripper_Ungrab);
+
+sort LocSort_Turner_turner = struct loc_Turner_turner_Flip_left | loc_Turner_turner_Flip_right;
+
+proc BehProc_Turner_turner(Locvar_Turner_turner : LocSort_Turner_turner) =
+  (Locvar_Turner_turner == loc_Turner_turner_Flip_left) -> flip_left . BehProc_Turner_turner(loc_Turner_turner_Flip_left) +
+  (Locvar_Turner_turner == loc_Turner_turner_Flip_left) -> flip_right . BehProc_Turner_turner(loc_Turner_turner_Flip_right) +
+  (Locvar_Turner_turner == loc_Turner_turner_Flip_right) -> flip_left . BehProc_Turner_turner(loc_Turner_turner_Flip_left) +
+  (Locvar_Turner_turner == loc_Turner_turner_Flip_right) -> flip_right . BehProc_Turner_turner(loc_Turner_turner_Flip_right);
+
+sort LocSort_Turner_zMotor = struct loc_Turner_zMotor_Above_belt | loc_Turner_zMotor_At_belt;
+
+proc BehProc_Turner_zMotor(Locvar_Turner_zMotor : LocSort_Turner_zMotor) =
+  (Locvar_Turner_zMotor == loc_Turner_zMotor_Above_belt) -> move_to_above_belt . BehProc_Turner_zMotor(loc_Turner_zMotor_Above_belt) +
+  (Locvar_Turner_zMotor == loc_Turner_zMotor_Above_belt) -> move_to_at_belt . BehProc_Turner_zMotor(loc_Turner_zMotor_At_belt) +
+  (Locvar_Turner_zMotor == loc_Turner_zMotor_At_belt) -> move_to_above_belt . BehProc_Turner_zMotor(loc_Turner_zMotor_Above_belt) +
+  (Locvar_Turner_zMotor == loc_Turner_zMotor_At_belt) -> move_to_at_belt . BehProc_Turner_zMotor(loc_Turner_zMotor_At_belt);
+
+sort LocSort_Activity_TurnerTurnTop = struct loc_Activity_TurnerTurnTop_l0 | loc_Activity_TurnerTurnTop_l1 | loc_Activity_TurnerTurnTop_l2 | loc_Activity_TurnerTurnTop_l3 | loc_Activity_TurnerTurnTop_l4 | loc_Activity_TurnerTurnTop_l5 | loc_Activity_TurnerTurnTop_l6 | loc_Activity_TurnerTurnTop_l7 | loc_Activity_TurnerTurnTop_l8a | loc_Activity_TurnerTurnTop_l8b | loc_Activity_TurnerTurnTop_l9 | loc_Activity_TurnerTurnTop_l10 | loc_Activity_TurnerTurnTop_l11 | loc_Activity_TurnerTurnTop_l12;
+
+proc BehProc_Activity_TurnerTurnTop(Locvar_Activity_TurnerTurnTop : LocSort_Activity_TurnerTurnTop) =
+  (Locvar_Activity_TurnerTurnTop == loc_Activity_TurnerTurnTop_l0) -> claim_Stopper2 . BehProc_Activity_TurnerTurnTop(loc_Activity_TurnerTurnTop_l1) +
+  (Locvar_Activity_TurnerTurnTop == loc_Activity_TurnerTurnTop_l1) -> claim_Stopper1 . BehProc_Activity_TurnerTurnTop(loc_Activity_TurnerTurnTop_l2) +
+  (Locvar_Activity_TurnerTurnTop == loc_Activity_TurnerTurnTop_l2) -> claim_Turner . BehProc_Activity_TurnerTurnTop(loc_Activity_TurnerTurnTop_l3) +
+  (Locvar_Activity_TurnerTurnTop == loc_Activity_TurnerTurnTop_l3) -> grab . BehProc_Activity_TurnerTurnTop(loc_Activity_TurnerTurnTop_l4) +
+  (Locvar_Activity_TurnerTurnTop == loc_Activity_TurnerTurnTop_l4) -> move_to_above_belt . BehProc_Activity_TurnerTurnTop(loc_Activity_TurnerTurnTop_l5) +
+  (Locvar_Activity_TurnerTurnTop == loc_Activity_TurnerTurnTop_l5) -> flip_left . BehProc_Activity_TurnerTurnTop(loc_Activity_TurnerTurnTop_l6) +
+  (Locvar_Activity_TurnerTurnTop == loc_Activity_TurnerTurnTop_l6) -> move_to_at_belt . BehProc_Activity_TurnerTurnTop(loc_Activity_TurnerTurnTop_l7) +
+  (Locvar_Activity_TurnerTurnTop == loc_Activity_TurnerTurnTop_l7) -> ungrab . BehProc_Activity_TurnerTurnTop(loc_Activity_TurnerTurnTop_l8a) +
+  (Locvar_Activity_TurnerTurnTop == loc_Activity_TurnerTurnTop_l7) -> move_to_above_belt . BehProc_Activity_TurnerTurnTop(loc_Activity_TurnerTurnTop_l8b) +
+  (Locvar_Activity_TurnerTurnTop == loc_Activity_TurnerTurnTop_l8a) -> move_to_above_belt . BehProc_Activity_TurnerTurnTop(loc_Activity_TurnerTurnTop_l9) +
+  (Locvar_Activity_TurnerTurnTop == loc_Activity_TurnerTurnTop_l8b) -> ungrab . BehProc_Activity_TurnerTurnTop(loc_Activity_TurnerTurnTop_l9) +
+  (Locvar_Activity_TurnerTurnTop == loc_Activity_TurnerTurnTop_l9) -> flip_right . BehProc_Activity_TurnerTurnTop(loc_Activity_TurnerTurnTop_l10) +
+  (Locvar_Activity_TurnerTurnTop == loc_Activity_TurnerTurnTop_l10) -> release_Turner . BehProc_Activity_TurnerTurnTop(loc_Activity_TurnerTurnTop_l11) +
+  (Locvar_Activity_TurnerTurnTop == loc_Activity_TurnerTurnTop_l11) -> release_Stopper2 . BehProc_Activity_TurnerTurnTop(loc_Activity_TurnerTurnTop_l12) +
+  (Locvar_Activity_TurnerTurnTop == loc_Activity_TurnerTurnTop_l12) -> release_Stopper1 . BehProc_Activity_TurnerTurnTop(Locvar_Activity_TurnerTurnTop);
+
+act grab, renamed_grab, ungrab, renamed_ungrab, flip_left, renamed_flip_left, flip_right, renamed_flip_right, move_to_above_belt, renamed_move_to_above_belt, move_to_at_belt, renamed_move_to_at_belt, claim_Stopper2, renamed_claim_Stopper2, claim_Stopper1, renamed_claim_Stopper1, claim_Turner, renamed_claim_Turner, release_Turner, renamed_release_Turner, release_Stopper2, renamed_release_Stopper2, release_Stopper1, renamed_release_Stopper1;
+
+init allow({grab,
+            ungrab,
+            flip_left,
+            flip_right,
+            move_to_above_belt,
+            move_to_at_belt,
+            claim_Stopper2,
+            claim_Stopper1,
+            claim_Turner,
+            release_Turner,
+            release_Stopper2,
+            release_Stopper1},
+     rename({renamed_grab -> grab,
+             renamed_ungrab -> ungrab,
+             renamed_flip_left -> flip_left,
+             renamed_flip_right -> flip_right,
+             renamed_move_to_above_belt -> move_to_above_belt,
+             renamed_move_to_at_belt -> move_to_at_belt},
+     block({grab, ungrab, flip_left, flip_right, move_to_above_belt, move_to_at_belt},
+     comm({grab | grab -> renamed_grab,
+           ungrab | ungrab -> renamed_ungrab,
+           flip_left | flip_left -> renamed_flip_left,
+           flip_right | flip_right -> renamed_flip_right,
+           move_to_above_belt | move_to_above_belt -> renamed_move_to_above_belt,
+           move_to_at_belt | move_to_at_belt -> renamed_move_to_at_belt},
+     (
+       allow({grab,
+              ungrab,
+              flip_left,
+              flip_right,
+              move_to_above_belt,
+              move_to_at_belt},
+       (
+         allow({grab,
+                ungrab,
+                flip_left,
+                flip_right},
+         (
+           BehProc_Turner_gripper(loc_Turner_gripper_Ungrab)
+         ||
+           BehProc_Turner_turner(loc_Turner_turner_Flip_left)
+         ))
+       ||
+         BehProc_Turner_zMotor(loc_Turner_zMotor_Above_belt)
+       ))
+     ||
+       BehProc_Activity_TurnerTurnTop(loc_Activity_TurnerTurnTop_l0)
+     )))));

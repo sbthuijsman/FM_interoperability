@@ -1,0 +1,436 @@
+import "xcps.machine"
+
+activity InputTopInverted {
+	actions {
+	}
+	action flow {
+	}
+}
+
+activity InputBottom {
+	actions {
+	}
+	action flow {
+	}
+}
+
+activity TopGoToTurner {
+	actions {
+		CB1: claim Belt1
+		RB1: release Belt1
+		CB22: claim Belt2_2
+		RB22: release Belt2_2
+		C1: claim Turner
+		R1: release Turner
+		CS1: claim Stopper1
+		RS1: release Stopper1
+		CS: claim Stopper2
+		RS: release Stopper2
+		CS5: claim Stopper5
+		RS5: release Stopper5
+		Csens1: claim Sensor1
+		Rsens1: release Sensor1
+		Csens: claim Sensor2
+		Rsens: release Sensor2
+		traverseBelt1: Belt1.beltArea.traverse
+		traverseBelt2_2: Belt2_2.beltArea.traverse
+		Stop1: Stopper1.stopper.enable
+		Stop2: Stopper2.stopper.enable
+		Stop5: Stopper5.stopper.enable
+		Go1: Stopper1.stopper.disable
+		Go5: Stopper5.stopper.disable
+		P1: Sensor1.sensor.pass
+		W1: Sensor1.sensor.await
+		P2: Sensor2.sensor.pass
+	}
+	action flow {
+		CB1->traverseBelt1->	|s1->RB1									|s3->R1
+		CB22->					|s1->traverseBelt2_2->														|s4->RB22
+		CS5->C1->CS->			|s1->Go5->				|s2->P2-> 			|s3 ->RS  						|s4->RS5
+		Csens->					|s1-> Stop2 ->			|s2	 				|s3->Rsens
+		CS1->											|s2 												|s4->RS1 
+		Csens1->										|s2->Go1->P1->					|s5->Stop1->		|s4->Rsens1
+																						|s5->W1->Stop5->	|s4
+	}
+}
+
+activity TurnerGoDown {
+	prerequisites{
+		Turner.zMotor at Above_Belt
+	}
+	actions {
+		CB22: claim Belt2_2
+		RB22: release Belt2_2 
+		CB23 : claim Belt2_3   
+		RB23 : release Belt2_3 
+		C_belt2 : claim Belt2
+		R_belt2 : release Belt2 
+		C_T1 : claim Turner
+		R_T1: release Turner
+		CS1: claim Stopper1
+		RS1: release Stopper1 
+		CS: claim Stopper2
+		RS: release Stopper2  
+		Down : move Turner.zMotor to At_Belt with speed profile normal 
+//		E1 : event TurnerGoDown
+	}
+	action flow {
+		CB22->		|s1 				|s2->RB22
+		CB23->		|s1 				|s2->RB23 
+		C_belt2->	|s1 				|s2->R_belt2
+		CS1->		|s1   				|s2->RS1 
+		CS->		|s1 				|s2->RS 
+		C_T1->		|s1 -> Down->    	|s2->R_T1
+//		  			|s1	-> E1 ->		|s2 
+	} 
+//	events {
+//		TurnerGoDown
+//	} 
+}
+
+activity RetryTurnerGoDown {
+	prerequisites{
+		Turner.zMotor at At_Belt
+	}
+	actions {
+		CB22: claim Belt2_2
+		RB22: release Belt2_2 
+		CB23 : claim Belt2_3   
+		RB23 : release Belt2_3 
+		C_belt2 : claim Belt2
+		R_belt2 : release Belt2 
+		C_T1 : claim Turner
+		R_T1: release Turner
+		CS1: claim Stopper1
+		RS1: release Stopper1 
+		CS: claim Stopper2
+		RS: release Stopper2  
+		Up : move Turner.zMotor to Above_Belt with speed profile normal 
+		Down : move Turner.zMotor to At_Belt with speed profile normal 
+//		E1 : event TurnerGoDown
+	}
+	action flow {
+		CB22->		|s1 				|s2->RB22
+		CB23->		|s1 				|s2->RB23 
+		C_belt2->	|s1 				|s2->R_belt2
+		CS1->		|s1   				|s2->RS1 
+		CS->		|s1 				|s2->RS  
+		C_T1->		|s1->Up->Down->		|s2->R_T1
+//		  					|s3->E1->	|s2 
+//		C_T1->		|s1->Up-> 	|s3->Down->	|s2->R_T1
+	} 
+//	events {
+//		TurnerGoDown
+//	} 
+} 
+
+activity TurnerTurnTop {
+	prerequisites{
+		Turner.zMotor at At_Belt
+	}
+	actions {  
+		C_T1 : claim Turner
+		R_T1: release Turner
+		CS1: claim Stopper1
+		RS1: release Stopper1  
+		CS: claim Stopper2
+		RS: release Stopper2  
+		Left : Turner.turner.flip_left 
+		Right : Turner.turner.flip_right
+		Up : move Turner.zMotor to Above_Belt with speed profile normal 
+		Up2 : move Turner.zMotor to Above_Belt with speed profile normal
+		Down2 : move Turner.zMotor to At_Belt with speed profile normal
+		Grab : Turner.gripper.grab
+		Release : Turner.gripper.ungrab  
+	}
+	action flow {
+		  CS->CS1->C_T1->Grab->Up->Left->Down2->|s3->Release->|s4->Right->R_T1->RS->RS1
+												|s3->Up2    ->|s4
+	} 
+}
+
+activity TopGoAfterTurner {
+	actions { 
+		CS1: claim Stopper2
+		RS1: release Stopper2 
+		Csen: claim Sensor3
+		Rsen: release Sensor3    
+		CB23 : claim Belt2_3   
+		RB23 : release Belt2_3 
+		CB24 : claim Belt2_4   
+		RB24 : release Belt2_4 
+		Stopper2Retract: Stopper2.stopper.disable
+		traverseBelt2_3 : Belt2_3.beltArea.traverse
+		W1: Sensor3.sensor.pass 
+	}
+	action flow {
+		Csen->	|s1->Stopper2Retract->W1->		|s2->RB23
+		CB23->	|s1->traverseBelt2_3->			|s2->Rsen
+		CS1->	|s1 							|s2->RS1	
+		CB24->	|s1								|s2->RB24				 	
+	}
+} 
+
+activity BottomGoAfterTurner {
+	actions { 
+		CS1: claim Stopper2
+		RS1: release Stopper2 
+		Csen: claim Sensor3
+		Rsen: release Sensor3    
+		CB23 : claim Belt2_3   
+		RB23 : release Belt2_3 
+		CB24 : claim Belt2_4   
+		RB24 : release Belt2_4 
+		Stopper2Retract: Stopper2.stopper.disable
+		traverseBelt2_3 : Belt2_3.beltArea.traverse
+		W1: Sensor3.sensor.pass 
+	}
+	action flow {
+		Csen->	|s1->Stopper2Retract->W1->	|s2->RB23
+		CB23->	|s1->traverseBelt2_3->		|s2->Rsen
+		CS1->	|s1							|s2->RS1	
+		CB24->	|s1							|s2->RB24				 	
+	}
+} 
+
+activity BottomGoToTurner{
+	actions {
+		CB22: claim Belt2_2
+		RB22: release Belt2_2 
+		C1: claim Turner
+		R1: release Turner 
+		CS1: claim Stopper1
+		RS1: release Stopper1 
+		CS2: claim Stopper2
+		RS2: release Stopper2 
+		Csens1: claim Sensor1
+		Rsens1: release Sensor1 
+		Csens2: claim Sensor2
+		Rsens2: release Sensor2   
+		traverseBelt2_2 : Belt2_2.beltArea.traverse 
+		Stop2: Stopper2.stopper.enable  
+		Stop1: Stopper1.stopper.enable  
+		Go1: Stopper1.stopper.disable 
+		P1: Sensor1.sensor.pass
+		P2: Sensor2.sensor.pass
+	}
+	action flow {
+		CS2->			|s1->Stop2->		|s3->RS2
+		CB22->			|s1->traverseBelt2_2->				|s4->RB22
+		C1->Csens2->	|s1-> 	|s2->P2-> 	|s3->Rsens2	
+	    Csens1->				|s2->Go1->P1->Stop1->		|s4->Rsens1->RS1 
+		CS1->					|s2 		|s3->R1	   										
+	}
+}
+
+activity TopGoToSensor4 {
+	actions { 
+		CS1: claim Stopper3
+		RS1: release Stopper3 
+		Csen: claim Sensor4
+		Rsen: release Sensor4    
+		CB23 : claim Belt2_4   
+		RB23 : release Belt2_4 
+		traverseBelt2_4 : Belt2_4.beltArea.traverse
+		W1: Sensor4.sensor.await  
+	}
+	action flow {
+		Csen->	|s1->W1 ->				|s2->RB23
+		CB23->	|s1->traverseBelt2_4->	|s2->Rsen
+		CS1->	|s1 					|s2->RS1					 	
+	}
+}
+
+activity BottomGoToSensor4 {
+	actions { 
+		CS1: claim Stopper3
+		RS1: release Stopper3 
+		Csen: claim Sensor4
+		Rsen: release Sensor4    
+		CB23 : claim Belt2_4   
+		RB23 : release Belt2_4 
+		traverseBelt2_4 : Belt2_4.beltArea.traverse
+		W1: Sensor4.sensor.await  
+	}
+	action flow {
+		Csen->	|s1->W1->				|s2->RB23
+		CB23->	|s1->traverseBelt2_4->	|s2->Rsen
+		CS1->	|s1 					|s2->RS1					 	
+	}
+}
+ 
+activity TopGoToSwitch2 {
+	actions { 
+		CS1: claim Stopper3
+		RS1: release Stopper3  
+		Csen: claim Sensor5
+		Rsen: release Sensor5    
+		CB25 : claim Belt2_5   
+		RB25 : release Belt2_5 
+		CB26: claim Belt2_6
+		RB26: release Belt2_6  
+		CB2_4 : claim Belt2_4   
+		RB2_4 : release Belt2_4 
+		traverseBelt2_5 : Belt2_5.beltArea.traverse
+		W1: Sensor5.sensor.await
+		W2: Sensor5.sensor.pass 
+		StpDis : Stopper3.stopper.disable
+		StpEnable : Stopper3.stopper.enable
+	}
+	action flow { 
+		Csen->	|s1->StpDis->W1->		|s4->StpEnable->W2->	|s2->Rsen
+		CB25->	|s1->traverseBelt2_5->							|s2->RB25
+		CS1->	|s1												|s2->RS1		
+		CB2_4->	|s1 					|s4->RB2_4	
+		CB26->	|s1 											|s2->RB26
+	}
+}
+ 
+ 
+
+activity TopGoToPickPlace{
+	actions{  
+		CB26: claim Belt2_6
+		RB26: release Belt2_6  
+		CB31: claim Belt3
+		RB31: release Belt3 
+		Csen: claim Sensor8
+		Rsen: release Sensor8 
+		C4: claim Stopper4
+		R4: release Stopper4 
+		Stopper4Enable : Stopper4.stopper.enable   
+		traverseBelt2_6 : Belt2_6.beltArea.traverse
+		traverseBelt3_1 : Belt3.beltArea.traverse
+		W1: Sensor8.sensor.await 
+	}
+	action flow{
+		CB26->	|s1 					|s4->RB26			
+		CB31->	|s1->traverseBelt2_6->	|s4->traverseBelt3_1 ->		|s3->RB31
+		C4->	|s1->Stopper4Enable->W1->							|s3 ->R4
+		Csen->	|s1	 										    	|s3->Rsen  	
+		
+			
+	} 
+}
+ 
+activity BottomGofromSt3ToTable2 {
+	 
+	actions {
+		CSt3: claim Stopper3
+		RSt3: release Stopper3  
+		CSe5: claim Sensor5
+		RSe5: release Sensor5    
+		CB2_5 : claim Belt2_5   
+		RB2_5 : release Belt2_5 
+		CB2_4 : claim Belt2_4   
+		RB2_4 : release Belt2_4 
+		CTa2: claim IndexingTable2
+		RTa2: release IndexingTable2  
+		CSw2: claim Switch2
+		RSw2: release Switch2       
+		St3disable: Stopper3.stopper.disable 
+		Belt2_5traverse : Belt2_5.beltArea.traverse
+		Se5await: Sensor5.sensor.await
+		Se5pass: Sensor5.sensor.pass  
+		St3enable : Stopper3.stopper.enable
+		Sw2enable: Switch2.switch.enable 
+		Sw2disable: Switch2.switch.disable 
+	}
+	action flow { 
+		CSt3->	|s1-> St3disable->	|s2->Se5await->St3enable->Se5pass->Sw2enable->	|s3->Sw2disable->	|s4->RSt3
+		CSw2->	|s1  																					|s4->RSw2
+		CSe5->	|s1  																					|s4->RSe5
+		CTa2->	|s1 																					|s4->RTa2
+		CB2_5->	|s1 				|s2->Belt2_5traverse->							|s3 |s4->RB2_5
+		CB2_4->	|s1 				|s2->RB2_4										
+	}
+}
+
+activity AlignTable2WithBelt {
+	actions {
+		C1: claim IndexingTable2
+		R1: release IndexingTable2 
+		A1: IndexingTable2.aligner.alignWithBelt 
+	}
+	action flow {
+		C1->A1->R1 
+	}
+}
+
+activity AlignTable2WithPickPlace {
+	actions {
+		C1: claim IndexingTable2
+		R1: release IndexingTable2 
+		A1: IndexingTable2.aligner.alignWithOther
+	}
+	action flow {
+		C1->A1->R1 
+	}
+}
+
+activity TopPickUp {
+	prerequisites
+	{
+		PickPlace.yzMotor at Above_Belt  
+	}
+	actions { 
+		C2: claim PickPlace
+		R2: release PickPlace  
+		C4: claim Stopper4
+		R4: release Stopper4 
+		down: move PickPlace.yzMotor to At_Belt with speed profile normal 
+		up: move PickPlace.yzMotor to Above_Belt with speed profile normal
+		grab: PickPlace.vacuum.grab   
+	}
+	action flow {
+		C2->C4->down->grab->up->R2->R4					  
+	} 
+}
+
+activity TopAssemble {
+	prerequisites
+	{
+		PickPlace.yzMotor at Above_Belt  
+	}
+	actions {
+		C1: claim IndexingTable2
+		R1: release IndexingTable2
+		C2: claim PickPlace
+		R2: release PickPlace 
+		C4: claim Stopper4
+		R4: release Stopper4  
+		A4: move PickPlace.yzMotor to Above_Table with speed profile normal 
+		A5: move PickPlace.yzMotor to At_Table with speed profile normal 
+		A6: PickPlace.vacuum.ungrab
+		A7: move PickPlace.yzMotor to Above_Table with speed profile normal 
+		A8: move PickPlace.yzMotor to Above_Belt with speed profile normal
+	}
+	action flow {
+		C1->C2->C4->A4->A5->A6->A7->R1->A8->R2->R4 
+	} 
+}
+
+activity ProdGoFromTable2ToBelt4 {
+	actions {  
+		Ctab2: claim IndexingTable2
+		Rtab2: release IndexingTable2
+		Cb4: claim Belt4
+		Rb4: release Belt4 
+		C3: claim Switch3
+		R3: release Switch3  
+		Csen: claim Sensor9
+		Rsen: release Sensor9   
+		s3enable: Switch3.switch.enable 
+		s3disable: Switch3.switch.disable 
+		table1 : IndexingTable2.aligner.alignWithBelt 
+		P1: Sensor9.sensor.pass 
+	}
+	action flow {
+		Csen->Ctab2->C3->	|s1->table1->	|s2->s3disable->Rtab2->P1->Rb4->R3->Rsen
+		Cb4->				|s1->s3enable->	|s2  
+	}
+}
+
+//event TurnerGoDown {
+//  outcomes :TURNERDOWNSUCC, TURNERDOWNFAIL 
+//}

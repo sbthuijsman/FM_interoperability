@@ -1,0 +1,218 @@
+import "xCPS_plant.cif";
+
+requirement automaton InputLocation:
+    disc int[0..1] nTops = 0;
+    disc int[0..1] nBots = 0;
+    location l0:
+        initial; marked;
+        edge InputTopInverted when nTops=0 do nTops:=1;
+        edge InputBottom when nBots=0 do nBots:=1;
+        edge TopGoToTurner when nTops=1 do nTops:=0;
+        edge BottomGoToTurner when nBots=1 do nBots:=0;
+end
+requirement invariant InputLocation.nTops+InputLocation.nBots<=1;
+
+requirement automaton TurnerLocation:
+    disc int[0..1] nTops = 0;
+    disc int[0..1] nInvTops = 0;
+    disc int[0..1] nBots = 0;
+    alg int nPieces = nTops+nInvTops+nBots;
+    location l0:
+        initial; marked;
+        edge TopGoToTurner when nPieces=0 do nTops:=1;
+        edge BottomGoToTurner when nPieces=0 do nBots:=1;
+
+        edge BottomGoAfterTurner when nBots=1 do nBots:=0;
+        edge TopGoAfterTurner when nTops=1 or nInvTops=1 do nTops:=0,nInvTops:=0;
+
+        edge TURNERDOWNSUCC_TurnerTurnTop when nTops=1 do nInvTops:=1,nTops:=0;
+end
+requirement TurnerLocation.nPieces<=1;
+
+requirement automaton Turner:
+    location NoPiece:
+        initial; marked;
+        edge TopGoToTurner goto TurnTop;
+        edge BottomGoToTurner goto Bottom;
+    location TurnTop:
+        edge TurnerGoDown goto TurningTop;
+    location TurningTop:
+        edge TURNERDOWNSUCC_TurnerTurnTop goto TurnedTop;
+        edge TURNERDOWNFAIL_RetryTurnerGoDown;
+    location TurnedTop:
+        edge TopGoAfterTurner goto NoPiece;
+    location Bottom:
+        edge BottomGoAfterTurner goto NoPiece;
+end
+
+// requirement TURNERDOWNFAIL_RetryTurnerGoDown needs false; //assuming happy-flow, no fails for now
+
+requirement automaton Sensor3Location:
+    disc int[0..1] nTops = 0;
+    disc int[0..1] nBots = 0;
+    disc int[0..1] nInvTops = 0;
+    location l0:
+        initial; marked;
+        edge TopGoAfterTurner when nTops=0 and nInvTops=0 do nInvTops:=TurnerLocation.nInvTops, nTops := TurnerLocation.nTops;
+        edge BottomGoAfterTurner when nBots=0 do nBots:=1;
+
+        edge TopGoToSensor4 when nTops=1 and nInvTops=0 and nBots=0 do nTops:=0;
+        edge TopGoToSensor4 when nInvTops=1 and nTops=0 and nBots=0 do nInvTops:=0;
+        edge BottomGoToSensor4 when nBots=1 do nBots:=0;
+end
+requirement invariant Sensor3Location.nTops+Sensor3Location.nInvTops+Sensor3Location.nBots<=1;
+
+requirement automaton Sensor4Location:
+    disc int[0..1] nTops = 0;
+    disc int[0..1] nInvTops = 0;
+    disc int[0..1] nBots = 0;
+    location l0:
+        initial; marked;
+        edge TopGoToSensor4 when nTops=0 and nInvTops=0 do nInvTops:=Sensor3Location.nInvTops, nTops := Sensor3Location.nTops;
+        edge BottomGoToSensor4 when nBots=0 do nBots:=1;
+
+        edge TopGoToSwitch2 when nTops=1 and nInvTops=0 do nTops:=0;
+        edge TopGoToSwitch2 when nInvTops=1 and nTops=0 do nInvTops:=0;
+        edge BottomGofromSt3ToTable2 when nBots=1 do nBots:=0;
+end
+requirement invariant Sensor4Location.nTops+Sensor4Location.nInvTops+Sensor4Location.nBots<=1;
+
+requirement automaton TurntableLocation0:
+    disc int[0..1] nBots = 0;
+    location l0:
+        initial; marked;
+        edge BottomGofromSt3ToTable2 when Sensor4Location.nBots=1 and nBots=0 do nBots:=1;
+        edge AlignTable2WithPickPlace, AlignTable2WithBelt, ProdGoFromTable2ToBelt4 when nBots=1 do nBots:=0;
+        edge AlignTable2WithPickPlace, AlignTable2WithBelt, ProdGoFromTable2ToBelt4 when nBots=0;
+end
+
+requirement BottomGofromSt3ToTable2 needs AlternateAlignment.AlignedWithBelt;
+
+requirement automaton TurntableLocation30:
+    disc int[0..1] nBots = 0;
+    location l0:
+        initial; marked;
+        edge AlignTable2WithPickPlace, AlignTable2WithBelt, ProdGoFromTable2ToBelt4  when TurntableLocation0.nBots=1 do nBots:=1;
+        edge AlignTable2WithPickPlace, AlignTable2WithBelt, ProdGoFromTable2ToBelt4  when TurntableLocation0.nBots=0 do nBots:=0;
+end
+
+requirement automaton TurntableLocation60:
+    disc int[0..1] nBots = 0;
+    location l0:
+        initial; marked;
+        edge AlignTable2WithPickPlace, AlignTable2WithBelt, ProdGoFromTable2ToBelt4  when TurntableLocation30.nBots=1 do nBots:=1;
+        edge AlignTable2WithPickPlace, AlignTable2WithBelt, ProdGoFromTable2ToBelt4  when TurntableLocation30.nBots=0 do nBots:=0;
+end
+
+requirement automaton TurntableLocation90:
+    disc int[0..1] nBots = 0;
+    disc int[0..1] nPrd = 0;
+    location l0:
+        initial; marked;
+        edge AlignTable2WithPickPlace, AlignTable2WithBelt, ProdGoFromTable2ToBelt4  when TurntableLocation60.nBots=1 do nBots:=1, nPrd:=0;
+        edge AlignTable2WithPickPlace, AlignTable2WithBelt, ProdGoFromTable2ToBelt4  when TurntableLocation60.nBots=0 do nBots:=0, nPrd:=0;
+
+        edge TopAssemble when nBots=1 do nBots:=0, nPrd:=1;
+end
+requirement invariant TurntableLocation90.nBots+TurntableLocation90.nPrd<=1;
+
+requirement automaton TurntableLocation120:
+    disc int[0..1] nBots = 0;
+    disc int[0..1] nPrd = 0;
+    location l0:
+        initial; marked;
+        edge AlignTable2WithPickPlace, AlignTable2WithBelt, ProdGoFromTable2ToBelt4  when TurntableLocation90.nPrd=1 and TurntableLocation90.nBots=0 do nPrd:=1;
+        edge AlignTable2WithPickPlace, AlignTable2WithBelt, ProdGoFromTable2ToBelt4  when TurntableLocation90.nBots=1 and TurntableLocation90.nPrd=0 do nBots:=1;
+        edge AlignTable2WithPickPlace, AlignTable2WithBelt, ProdGoFromTable2ToBelt4  when TurntableLocation90.nBots=0 and TurntableLocation90.nPrd=0 do nPrd:=0,nBots:=0;
+end
+requirement invariant TurntableLocation120.nBots+TurntableLocation120.nPrd<=1;
+
+requirement automaton TurntableLocation150:
+    disc int[0..1] nBots = 0;
+    disc int[0..1] nPrd = 0;
+    location l0:
+        initial; marked;
+        edge AlignTable2WithPickPlace, AlignTable2WithBelt, ProdGoFromTable2ToBelt4  when TurntableLocation120.nPrd=1 and TurntableLocation120.nBots=0 do nPrd:=1;
+        edge AlignTable2WithPickPlace, AlignTable2WithBelt, ProdGoFromTable2ToBelt4  when TurntableLocation120.nBots=1 and TurntableLocation120.nPrd=0 do nBots:=1;
+        edge AlignTable2WithPickPlace, AlignTable2WithBelt, ProdGoFromTable2ToBelt4  when TurntableLocation120.nBots=0 and TurntableLocation120.nPrd=0 do nPrd:=0,nBots:=0;
+end
+requirement invariant TurntableLocation150.nBots+TurntableLocation150.nPrd<=1;
+
+requirement AlignTable2WithBelt needs not(TurntableLocation150.nPrd=1 or TurntableLocation150.nBots=1);
+requirement AlignTable2WithPickPlace needs not(TurntableLocation150.nPrd=1or TurntableLocation150.nBots=1);
+requirement ProdGoFromTable2ToBelt4 needs TurntableLocation150.nPrd=1 or TurntableLocation150.nBots=1;
+
+requirement automaton Switch2Location:
+    disc int[0..1] nTops = 0;
+    disc int[0..1] nInvTops = 0;
+    location l0:
+        initial; marked;
+        edge TopGoToSwitch2 when nTops=0 and nInvTops=0 do nInvTops:=Sensor4Location.nInvTops, nTops:=Sensor4Location.nTops;
+        edge TopGoToPickPlace when nInvTops=1 or nTops=1 do nInvTops:=0,nTops:=0;
+end
+
+requirement automaton PickPlaceLocation:
+    disc int[0..1] nTops = 0;
+    disc int[0..1] nInvTops = 0;
+    location l0:
+        initial; marked;
+        edge TopGoToPickPlace when nTops=0 and nInvTops=0 do nInvTops:=Switch2Location.nInvTops, nTops:=Switch2Location.nTops;
+        edge TopPickUp when nInvTops=1 goto PlaceTop;
+    location PlaceTop:
+        edge TopAssemble do nInvTops:=0 goto l0;
+end
+
+
+requirement automaton FiniteAlternatingInput:
+    location l0:
+        initial;
+        edge InputTopInverted goto l1;
+    location l1:
+        edge InputBottom goto l2;
+    location l2:
+        marked;
+end
+
+requirement automaton FiniteOutputs:
+    location l0:
+        initial;
+        edge ProdGoFromTable2ToBelt4 goto l1;
+    location l1:
+        marked;
+end
+
+requirement automaton AlternateAlignment:
+    location AlignedWithBelt:
+        initial; marked;
+        edge AlignTable2WithPickPlace goto AlignedWithPickPlace;
+    location AlignedWithPickPlace:
+        marked;
+        edge AlignTable2WithBelt, ProdGoFromTable2ToBelt4 goto AlignedWithBelt;
+end
+
+//reject the same amount of bottoms as number of tops that failed
+requirement automaton BottomPasses:
+    disc int[0..3] failcount = 0;
+    location l0:
+        initial;marked;
+//         edge TURNERDOWNFAIL_TurnerLift do failcount:=failcount+1;
+        edge AlignTable2WithPickPlace, AlignTable2WithBelt, ProdGoFromTable2ToBelt4 when TurntableLocation90.nBots=1 and failcount>0 do failcount:=failcount-1;
+        edge AlignTable2WithPickPlace, AlignTable2WithBelt, ProdGoFromTable2ToBelt4 when TurntableLocation90.nBots=0;
+end
+
+//do not rotate the table when there are no products to avoid self loops
+requirement AlignTable2WithPickPlace  needs TurntableLocation0.nBots=1 or TurntableLocation30.nBots=1 or
+                                            TurntableLocation60.nBots=1 or TurntableLocation90.nBots=1 or
+                                            TurntableLocation90.nBots=1 or TurntableLocation120.nBots=1 or
+                                            TurntableLocation150.nBots=1 or
+                                            TurntableLocation90.nPrd=1 or TurntableLocation120.nPrd=1 or
+                                            TurntableLocation150.nPrd=1;
+
+requirement AlignTable2WithBelt       needs TurntableLocation0.nBots=1 or TurntableLocation30.nBots=1 or
+                                            TurntableLocation60.nBots=1 or TurntableLocation90.nBots=1 or
+                                            TurntableLocation90.nBots=1 or TurntableLocation120.nBots=1 or
+                                            TurntableLocation150.nBots=1 or
+                                            TurntableLocation90.nPrd=1 or TurntableLocation120.nPrd=1 or
+                                            TurntableLocation150.nPrd=1;
+
+

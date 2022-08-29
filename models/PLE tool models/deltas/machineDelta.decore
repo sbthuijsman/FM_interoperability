@@ -1,0 +1,9 @@
+delta "machineDelta"
+	dialect <http://www.esi.lsat.nl/machine>
+	modifies <../model/xcps.machine>
+{
+	
+	removeResourceFromResourcesOfMachine(<Turner>, <xCPS>);
+	
+	removePeripheralTypeFromPeripheralTypesOfMachine(<turner>, <xCPS>);
+}

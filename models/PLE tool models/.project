@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<projectDescription>
+	<name>xCPS</name>
+	<comment></comment>
+	<projects>
+	</projects>
+	<buildSpec>
+		<buildCommand>
+			<name>org.deltaecore.suite.mapping.resource.demapping.builder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
+		<buildCommand>
+			<name>org.deltaecore.feature.constraint.resource.deconstraints.builder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
+		<buildCommand>
+			<name>org.deltaecore.core.decore.resource.decore.builder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
+		<buildCommand>
+			<name>org.deltaecore.feature.configuration.resource.deconfiguration.builder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
+	</buildSpec>
+	<natures>
+		<nature>org.deltaecore.suite.mapping.resource.demapping.nature</nature>
+		<nature>org.deltaecore.feature.constraint.resource.deconstraints.nature</nature>
+		<nature>org.deltaecore.core.decore.resource.decore.nature</nature>
+		<nature>org.deltaecore.feature.configuration.resource.deconfiguration.nature</nature>
+	</natures>
+</projectDescription>

@@ -1,0 +1,141 @@
+controllable InputTopInverted;
+controllable TopGoToTurner;
+controllable TurnerGoDown;
+controllable TopGoAfterTurner;
+controllable TopGoToSensor4;
+controllable TopGoToSwitch2;
+controllable TopGoToPickPlace;
+controllable TopPickUp;
+controllable TopAssemble;
+controllable InputBottom;
+controllable BottomGoToTurner;
+controllable BottomGoAfterTurner;
+controllable BottomGoToSensor4;
+controllable BottomGofromSt3ToTable2;
+controllable AlignTable2WithPickPlace;
+controllable AlignTable2WithBelt;
+controllable ProdGoFromTable2ToBelt4;
+controllable TURNERDOWNSUCC_TurnerTurnTop;
+controllable TURNERDOWNFAIL_RetryTurnerGoDown;
+automaton statespace:
+  alphabet InputTopInverted, InputBottom, TopGoToTurner, BottomGoToTurner, BottomGoAfterTurner, TopGoAfterTurner, TURNERDOWNSUCC_TurnerTurnTop, TurnerGoDown, TURNERDOWNFAIL_RetryTurnerGoDown, TopGoToSensor4, BottomGoToSensor4, TopGoToSwitch2, BottomGofromSt3ToTable2, AlignTable2WithPickPlace, AlignTable2WithBelt, ProdGoFromTable2ToBelt4, TopAssemble, TopGoToPickPlace, TopPickUp;
+  location loc1:
+    initial;
+    edge InputTopInverted goto loc2;
+  location loc2:
+    edge TopGoToTurner goto loc3;
+  location loc3:
+    edge InputBottom goto loc4;
+    edge TurnerGoDown goto loc5;
+  location loc4:
+    edge TurnerGoDown goto loc6;
+  location loc5:
+    edge InputBottom goto loc6;
+    edge TURNERDOWNSUCC_TurnerTurnTop goto loc7;
+    edge TURNERDOWNFAIL_RetryTurnerGoDown;
+  location loc6:
+    edge TURNERDOWNSUCC_TurnerTurnTop goto loc8;
+    edge TURNERDOWNFAIL_RetryTurnerGoDown;
+  location loc7:
+    edge InputBottom goto loc8;
+    edge TopGoAfterTurner goto loc9;
+  location loc8:
+    edge TopGoAfterTurner goto loc10;
+  location loc9:
+    edge InputBottom goto loc10;
+    edge TopGoToSensor4 goto loc11;
+  location loc10:
+    edge BottomGoToTurner goto loc12;
+    edge TopGoToSensor4 goto loc13;
+  location loc11:
+    edge InputBottom goto loc13;
+    edge TopGoToSwitch2 goto loc14;
+  location loc12:
+    edge TopGoToSensor4 goto loc15;
+  location loc13:
+    edge BottomGoToTurner goto loc15;
+    edge TopGoToSwitch2 goto loc16;
+  location loc14:
+    edge InputBottom goto loc16;
+    edge TopGoToPickPlace goto loc17;
+  location loc15:
+    edge BottomGoAfterTurner goto loc18;
+    edge TopGoToSwitch2 goto loc19;
+  location loc16:
+    edge BottomGoToTurner goto loc19;
+    edge TopGoToPickPlace goto loc20;
+  location loc17:
+    edge InputBottom goto loc20;
+    edge TopPickUp goto loc21;
+  location loc18:
+    edge TopGoToSwitch2 goto loc22;
+  location loc19:
+    edge BottomGoAfterTurner goto loc22;
+    edge TopGoToPickPlace goto loc23;
+  location loc20:
+    edge BottomGoToTurner goto loc23;
+    edge TopPickUp goto loc24;
+  location loc21:
+    edge InputBottom goto loc24;
+  location loc22:
+    edge BottomGoToSensor4 goto loc25;
+    edge TopGoToPickPlace goto loc26;
+  location loc23:
+    edge BottomGoAfterTurner goto loc26;
+    edge TopPickUp goto loc27;
+  location loc24:
+    edge BottomGoToTurner goto loc27;
+  location loc25:
+    edge BottomGofromSt3ToTable2 goto loc28;
+    edge TopGoToPickPlace goto loc29;
+  location loc26:
+    edge BottomGoToSensor4 goto loc29;
+    edge TopPickUp goto loc30;
+  location loc27:
+    edge BottomGoAfterTurner goto loc30;
+  location loc28:
+    edge AlignTable2WithPickPlace goto loc31;
+    edge TopGoToPickPlace goto loc32;
+  location loc29:
+    edge BottomGofromSt3ToTable2 goto loc32;
+    edge TopPickUp goto loc33;
+  location loc30:
+    edge BottomGoToSensor4 goto loc33;
+  location loc31:
+    edge AlignTable2WithBelt goto loc34;
+    edge TopGoToPickPlace goto loc35;
+  location loc32:
+    edge AlignTable2WithPickPlace goto loc35;
+    edge TopPickUp goto loc36;
+  location loc33:
+    edge BottomGofromSt3ToTable2 goto loc36;
+  location loc34:
+    edge AlignTable2WithPickPlace goto loc37;
+    edge TopGoToPickPlace goto loc38;
+  location loc35:
+    edge AlignTable2WithBelt goto loc38;
+    edge TopPickUp goto loc39;
+  location loc36:
+    edge AlignTable2WithPickPlace goto loc39;
+  location loc37:
+    edge TopGoToPickPlace goto loc40;
+  location loc38:
+    edge AlignTable2WithPickPlace goto loc40;
+    edge TopPickUp goto loc41;
+  location loc39:
+    edge AlignTable2WithBelt goto loc41;
+  location loc40:
+    edge TopPickUp goto loc42;
+  location loc41:
+    edge AlignTable2WithPickPlace goto loc42;
+  location loc42:
+    edge TopAssemble goto loc43;
+  location loc43:
+    edge AlignTable2WithBelt goto loc44;
+  location loc44:
+    edge AlignTable2WithPickPlace goto loc45;
+  location loc45:
+    edge ProdGoFromTable2ToBelt4 goto loc46;
+  location loc46:
+    marked;
+end

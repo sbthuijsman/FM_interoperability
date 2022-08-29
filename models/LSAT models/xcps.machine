@@ -1,0 +1,221 @@
+Machine xCPS
+
+PeripheralType yzMotor {
+	SetPoints {
+		Y [m]
+		Z [m]
+	}
+	Axes {
+		Y [m] moves Y
+		Z [m] moves Z
+	}
+}
+
+PeripheralType zMotor {
+	SetPoints {
+		Z [m]
+	}
+	Axes {
+		Z [m] moves Z
+	}
+}
+
+PeripheralType gripper {
+	Actions {
+		grab
+		ungrab
+	}
+}
+
+PeripheralType turner {
+	Actions {
+		flip_left
+		flip_right
+	}
+}
+
+PeripheralType sensor {
+	Actions {
+		await
+		pass
+	}
+}
+
+PeripheralType stopper {
+	Actions {
+		enable
+		disable
+	}
+}
+
+PeripheralType switch {
+	Actions {
+		enable
+		disable
+	}
+}
+
+PeripheralType tableAligner {
+	Actions {
+		alignWithBelt
+		alignWithOther
+	}
+}
+
+PeripheralType motor {
+	Actions {
+		enable
+		disable
+	}
+}
+
+PeripheralType beltArea {
+	Actions {
+		traverse
+	}
+}
+
+Resource Sensor1 {
+	sensor: sensor
+}
+
+Resource Sensor2 {
+	sensor: sensor
+}
+
+Resource Sensor3 {
+	sensor: sensor
+}
+
+Resource Sensor4 {
+	sensor: sensor
+}
+
+Resource Sensor5 {
+	sensor: sensor
+}
+
+Resource Sensor8 {
+	sensor: sensor
+}
+
+Resource Sensor9 {
+	sensor: sensor
+}
+
+Resource Stopper1 {
+	stopper: stopper
+}
+
+Resource Stopper2 {
+	stopper: stopper
+}
+
+Resource Stopper3 {
+	stopper: stopper
+}
+
+Resource Stopper4 {
+	stopper: stopper
+}
+
+Resource Stopper5 {
+	stopper: stopper
+}
+
+Resource Turner {
+	turner: turner
+	gripper: gripper
+	zMotor: zMotor {
+		AxisPositions {
+			Z (Above, At)
+		}
+		SymbolicPositions {
+			Above_Belt (Z.Above)
+			At_Belt (Z.At)
+		}
+		Profiles (normal)
+		Paths {
+			Above_Belt <-> At_Belt profile normal
+		}
+	}
+}
+
+Resource Switch2 {
+	switch: switch
+}
+
+Resource Switch3 {
+	switch: switch
+}
+
+Resource Belt1 {
+	motor: motor
+	beltArea: beltArea
+}
+
+Resource Belt2 {
+	motor: motor
+	beltArea: beltArea
+}
+
+Resource Belt3 {
+	motor: motor
+	beltArea: beltArea
+}
+
+Resource Belt4 {
+	motor: motor
+	beltArea: beltArea
+}
+
+Resource Belt2_2 {
+	beltArea: beltArea
+}
+
+Resource Belt2_3 {
+	beltArea: beltArea
+}
+
+Resource Belt2_4 {
+	beltArea: beltArea
+}
+
+Resource Belt2_5 {
+	beltArea: beltArea
+}
+
+Resource Belt2_6 {
+	beltArea: beltArea
+}
+
+Resource Belt3_2 {
+	beltArea: beltArea
+}
+
+Resource IndexingTable2 {
+	motor: motor
+	aligner: tableAligner
+}
+
+Resource PickPlace {
+	vacuum: gripper
+	yzMotor: yzMotor {
+		AxisPositions {
+			Y (Belt, Table)
+			Z (Above, At)
+		}
+		SymbolicPositions {
+			Above_Belt (Z.Above, Y.Belt)
+			At_Belt (Z.At, Y.Belt)
+			Above_Table (Z.Above, Y.Table)
+			At_Table (Z.At, Y.Table)
+		}
+		Profiles (normal)
+		Paths {
+			Above_Belt <-> At_Belt profile normal
+			Above_Belt <-> Above_Table profile normal
+			Above_Table <-> At_Table profile normal
+		}
+	}
+}
